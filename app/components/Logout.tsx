@@ -19,7 +19,7 @@ export default function Logout() {
 
     return (
         <div>
-            <button onClick={handleOAuthLogout} className="w-full border-gray-100 border-1 bg-white text-lg text-headline p-2 font- mt-2 rounded-md cursor-pointer hover:bg-gold-500 hover:border-gold-500 hover:text-black hover:shadow-md">
+            <button onClick={handleOAuthLogout} className="w-full border-gray-100 border-1 bg-white text-lg font-bold text-gray-900 p-2 font- mt-2 rounded-md cursor-pointer hover:bg-indigo-600 hover:border-indigo-700 hover:text-white hover:shadow-md transition duration-200">
                 Logout
             </button>
         </div>

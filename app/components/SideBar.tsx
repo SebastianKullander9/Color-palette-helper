@@ -29,7 +29,7 @@ export default function SideBar({ id, projectName, scrollToShades }: { id: strin
     }
 
     return (
-        <div className={`fixed flex justify-center top-0 left-0 h-full w-64 bg-background shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <nav role="complementary" className={`fixed flex justify-center top-0 left-0 h-full w-64 bg-background shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <div className="flex flex-col w-10/12">
                 <div className="py-8">
                     <h2 className="text-xl font-bold text-headline">Your Projects</h2>
@@ -48,9 +48,9 @@ export default function SideBar({ id, projectName, scrollToShades }: { id: strin
                     </div>
                 }
             </div>
-            <div onClick={toggleOpen} className="absolute bg-background right-[-55] p-2 shadow-md hover:scale-105 rounded-full top-1/2 cursor-pointer">
+            <button aria-label="open/close sidebar" onClick={toggleOpen} className="absolute bg-background right-[-55] p-2 shadow-md hover:scale-105 rounded-full cursor-pointer bottom-20 sm:top-1/2 sm:bottom-auto">
                 {isOpen ? <IoIosArrowBack size={32}/> : <IoIosArrowForward size={32}/>} 
-            </div>
-        </div>
+            </button>
+        </nav>
     );
 }

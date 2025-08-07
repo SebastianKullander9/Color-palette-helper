@@ -3,7 +3,7 @@
 import { createOrUpdateProjectById } from "@/utils/supabase/insertProject";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
-import { useShadesContext } from "../context/ShadesContext";
+import { useShadesStore } from "../store/shadesStore";
 import { useRouter } from "next/navigation";
 
 type SaveProjectProps = {
@@ -16,7 +16,7 @@ export default function SaveProject({ projectId, projectName, disabled }: SavePr
     const supabase = createClient();
     const router = useRouter();
     const [userId, setUserId] = useState<string | null>(null);
-    const { shades } = useShadesContext();
+    const { shades } = useShadesStore((state) => state);
 
     useEffect(() => {
         const getUser = async () => {
@@ -47,8 +47,9 @@ export default function SaveProject({ projectId, projectName, disabled }: SavePr
 
     return (
         <div>
-            <button 
-                className="w-full bg-black text-lg text-background p-2 font- mt-2 rounded-md cursor-pointer hover:bg-gold-500 hover:text-black hover:shadow-md"
+            <button
+                aria-label="Save project"
+                className="w-full bg-black text-lg font-bold text-white p-2 font- mt-2 rounded-md cursor-pointer hover:bg-indigo-600 hover:shadow-md transition duration-300"
                 disabled={disabled} 
                 onClick={handleClick}
             >

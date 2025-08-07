@@ -14,7 +14,9 @@ export default function CodeBlock({ code }: { code: string }) {
     if (!code) return null;
 
     return (
-        <div className="relative bg-gray-50 text-white overflow-hidden">
+        <figure className="relative bg-gray-50 text-white overflow-hidden">
+            <figcaption className="sr-only">CSS/Tailwind code block</figcaption>
+
             <button
                 onClick={copyToClipboard}
                 className="absolute right-2 top-2 bg-gray-100 text-sm text-text px-3 py-1 rounded hover:bg-gray-200 cursor-pointer"
@@ -30,6 +32,6 @@ export default function CodeBlock({ code }: { code: string }) {
             >
                 {code}
             </SyntaxHighlighter>
-        </div>
+        </figure>
     );
 }

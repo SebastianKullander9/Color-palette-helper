@@ -7,6 +7,8 @@ import { useSearchParams } from "next/navigation";
 import SaveProject from "./SaveProject";
 import Logout from "./Logout";
 import { deleteProjectById } from "@/utils/supabase/deleteProject";
+import { useColorsStore } from "../store/colorsStore";
+import { useShadesStore } from "../store/shadesStore";
 
 type Project = {
     id: string;
@@ -22,6 +24,8 @@ export default function Projects({ id, projectName, scrollToShades }: { id: stri
     const activeProjectId = searchParams.get("projectId");
     const [projectNameState, setProjectNameState] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const { setColors, convertToArray } = useColorsStore((state) => state);
+    const { clearShades } = useShadesStore((state) => state);
 
     useEffect(() => {
         const scroll = searchParams.get("scrollTo");
@@ -63,7 +67,14 @@ export default function Projects({ id, projectName, scrollToShades }: { id: stri
                 console.error("Failed to delete project", error);
                 alert("Failed to delete the project. Please try again.");
             }
+        }
     }
+
+    const handleNewProject = () => {
+        convertToArray("");
+        clearShades();
+        setColors("");
+        window.location.href = "/"
     }
 
     const validateProjectName = (value: string) => {
@@ -107,16 +118,16 @@ export default function Projects({ id, projectName, scrollToShades }: { id: stri
 
     return (
         <div className="flex flex-col justify-between h-full pb-8">
-            <div>
+            <div className="overflow-auto">
                 <ul>
                     {projects.map((project) => (
                     <div key={project.id} className="flex flex-row justify-between items-center mb-8">
-                        <li  className="flex hover:underline cursor-pointer items-center text-base text-text" onClick={() => handleClick(project.id)}>
+                        <li  className="flex hover:underline cursor-pointer items-center text-base text-gray-700 font-semibold" onClick={() => handleClick(project.id)}>
                             {project.name}
                         </li>
                         {project.id === activeProjectId ? 
-                            <div className="bg-turqoise-50 p-1 max-h-7 rounded-sm">
-                                <p className="text-sm text-text">Current</p>
+                            <div className="bg-indigo-500 p-1 max-h-7 rounded-sm">
+                                <p className="text-sm text-white font-bold">Opened</p>
                             </div> : <></>
                         }
                     </div>
@@ -124,9 +135,9 @@ export default function Projects({ id, projectName, scrollToShades }: { id: stri
                 </ul>
             </div>
             <div>
-                <p className="text-base text-text mb-2">Project Name</p>
+                <p className="text-md font-semibold text-gray-700 mb-2">Project Name</p>
                 <input 
-                    className="bg-gray-50 border-1 border-gray-100 rounded-sm p-2 w-full text-base text-text"
+                    className="bg-gray-50 border-1 border-gray-100 rounded-sm p-2 w-full text-base text-gray-700"
                     type="text"
                     value={projectNameState}
                     onChange={(e) => {
@@ -140,10 +151,10 @@ export default function Projects({ id, projectName, scrollToShades }: { id: stri
                     <p className="text-red-600 text-sm mt-1">{error}</p>
                 )}
                 <SaveProject projectId={id} projectName={projectNameState} disabled={!projectNameState || !!error} />
-                <button onClick={() => {window.location.href = "/"}} className="w-full bg-black text-lg text-background p-2 font- mt-2 rounded-md cursor-pointer hover:bg-gold-500 hover:text-black hover:shadow-md">
+                <button onClick={handleNewProject} className="w-full text-white bg-black text-lg font-bold p-2 font- mt-2 rounded-md cursor-pointer hover:bg-indigo-600 hover:shadow-md transition duration-300">
                     New Project
                 </button>
-                <button onClick={() => handleDelete(id)} className="w-full border-gray-100 border-1 text-lg text-headline p-2 font- mt-2 rounded-md cursor-pointer hover:bg-red-500 hover:text-white hover:shadow-md hover:border-red-500">
+                <button onClick={() => handleDelete(id)} className="w-full text-gray-900 border-gray-100 border-1 text-lg font-bold p-2 font- mt-2 rounded-md cursor-pointer hover:bg-red-500 hover:text-white hover:shadow-md hover:border-red-500 transition duraton-300">
                     Delete Project
                 </button>
                 <Logout />

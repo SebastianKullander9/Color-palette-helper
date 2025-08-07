@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useShadesContext } from "../context/ShadesContext";
+import { useShadesStore } from "../store/shadesStore";
 import CodeBlock from "./CodeBlock";
 
 const steps = [900, 800, 700, 600, 500, 400, 300, 200, 100, 50];
 
 export default function GenerateCode() {
-    const { shades } = useShadesContext();
+    const { shades } = useShadesStore((state) => state);
     const [ code, setCode ] = useState("");
     const exampleCodeOne = `
 :root {
@@ -35,7 +35,7 @@ export default function GenerateCode() {
     }, [shades])
 
     return (
-        <div className="flex flex-col md:flex-row justify-center mx-auto gap-8 py-16 px-8 w-full lg:w-3/5 md:w-full md:px-8 sm:w-4/5">
+        <section className="flex flex-col md:flex-row justify-center mx-auto gap-8 py-16 px-8 w-full lg:w-3/5 md:w-full md:px-8 sm:w-4/5">
             <div className="w-full">
                 <p className="text-base text-text mb-8">Copy the shades below to use them in your Tailwind project.</p>
                 <CodeBlock code={code} />
@@ -48,6 +48,6 @@ export default function GenerateCode() {
                 <div className="mb-8"></div>
                 <CodeBlock code={exampleCodeTwo} />
             </div>
-        </div>
+        </section>
     );
 }

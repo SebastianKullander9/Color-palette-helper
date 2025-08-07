@@ -23,7 +23,7 @@ const handleOAuthLogin = async (provider: 'google' | 'github') => {
     }
 
     return (
-        <div className="flex mx-auto flex-col gap-4">
+        <section aria-label="Oauth login options" className="flex mx-auto flex-col gap-4">
             <button onClick={() => handleOAuthLogin('google')} className="bg-googleGray p-[5px] pl-[10px] cursor-pointer hover:bg-gray-50 hover:shadow-sm">
                 <div className="flex justify-between items-center">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlnsXlink="http://www.w3.org/1999/xlink" className="w-8 h-8">
@@ -38,10 +38,10 @@ const handleOAuthLogin = async (provider: 'google' | 'github') => {
             </button>
             <button onClick={() => handleOAuthLogin('github')} className="bg-googleGray p-[10px] cursor-pointer hover:bg-gray-50 hover:shadow-sm">
                 <div className="flex justify-between">
-                    <Image src="/images/github-mark.png" alt="github logo for a button" width={22} height={18} />
+                    <Image src="/images/github-mark.png" alt="github logo" width={22} height={18} />
                     <p className="text-[14px] w-[200px] text-text">Sign in with Github</p>
                 </div>
             </button>
-        </div>
+        </section>
     )
 }

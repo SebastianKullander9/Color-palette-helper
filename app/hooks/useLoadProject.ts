@@ -1,5 +1,5 @@
-import { useShadesContext } from "../context/ShadesContext";
-import { useColorContext } from "../context/ColorContext";
+import { useShadesStore } from "../store/shadesStore";
+import { useColorsStore } from "../store/colorsStore";
 import { useProjectNameContext } from "../context/ProjectNameContext";
 import { createClient } from "@/utils/supabase/client";
 import isEqual from "lodash.isequal";
@@ -23,8 +23,8 @@ type ProjectData = {
 
 export const useLoadProject = () => {
 	const supabase = createClient();
-	const { shades, setShades } = useShadesContext();
-	const { setColor } = useColorContext();
+	const { shades, setShades } = useShadesStore((state) => state);
+	const { setColors, convertToArray } = useColorsStore((state) => state);
 	const { setProjectName } = useProjectNameContext();
 
 	const loadProject = async (projectId: string) => {
@@ -64,7 +64,10 @@ export const useLoadProject = () => {
 			setShades(shadesData);
 		}
 
-		setColor(data.colors.map((c) => c.original_hex));
+		let string = "";
+		data.colors.map((c) => string += c.original_hex)
+		setColors(string);
+		convertToArray(string);
 		setProjectName(data.name);
 
         return data.name;

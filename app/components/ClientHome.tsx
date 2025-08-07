@@ -6,16 +6,15 @@ import GenerateShades from "../components/GenerateShades";
 import GenerateCode from "../components/GenerateCode";
 import { useLoadProject } from "../hooks/useLoadProject";
 import IconDark from "../components/IconDark";
-import { useColorContext } from "../context/ColorContext";
+import { useColorsStore } from "../store/colorsStore";
 import { Element, scroller } from 'react-scroll';
-import { IoIosArrowDown } from "react-icons/io";
-import { IoIosArrowUp } from "react-icons/io";
 import SideBar from "../components/SideBar";
+import NavigatePage from "./NavigatePage";
 
 export default function Home() {
 	const [id, setId] = useState("");
 	const searchParams = useSearchParams();
-	const { colors } = useColorContext();
+	const { colorsArray } = useColorsStore((state) => state);
 	const { loadProject } = useLoadProject();
 	const [projectNameState, setProjectNameState] = useState("");
 
@@ -45,44 +44,38 @@ export default function Home() {
 	const scrollToShades = () => scrollTo("section2");
 
 	return (
-		<div className="w-full">
+		<main className="w-full">
 			<IconDark />
 			<SideBar id={id} projectName={projectNameState} scrollToShades={scrollToShades} />
 			
 			<Element name="section1" className="relative">
-				<div className="bg-turqoise-50 h-[calc(100vh-100px)] sm:h-[calc(100vh-200px)] flex justify-center items-center">
+				<section className="bg-indigo-50 h-[calc(100vh-100px)] sm:h-[calc(100vh-200px)] flex justify-center items-center">
+					<h2 className="sr-only">Color input section</h2>
 					<ColorInput scrollToElement={() => scrollTo("section2")} />
-					<button onClick={() => scrollTo("section2")} className={`absolute bottom-4 right-4 cursor-pointer ${colors.length === 0 ? "hidden" : ""}`} >
-						<IoIosArrowDown size={40} />
-					</button>
-				</div>
+					<NavigatePage downTo="section2" scrollTo={scrollTo} />
+				</section>
 			</Element>
 			
 			<Element name="section2" className="relative">
-				<div className={`min-h-[100vh] bg-background ${colors.length === 0 ? "hidden" : ""}`}>
+				<section className={`min-h-[100vh] bg-background ${colorsArray.length === 0 ? "hidden" : ""}`}>
+					<h2 className="sr-only">Shades display</h2>
 					<GenerateShades />
 					<div className="flex justify-center">	
-						<button onClick={() => scrollTo("section1", -200)} className={`absolute top-4 right-4 cursor-pointer ${colors.length === 0 ? "hidden" : ""}`} >
-							<IoIosArrowUp size={40} />
-						</button>
-						<button onClick={() => scrollTo("section3")} className={`absolute bottom-4 right-4 cursor-pointer ${colors.length === 0 ? "hidden" : ""}`} >
-							<IoIosArrowDown size={40} />
-						</button>
+						<NavigatePage upTo="section1" downTo="section3" scrollOffset={-200} scrollTo={scrollTo} />
 					</div>
-				</div>
+				</section>
 			</Element>
 			
 			<Element name="section3" className="relative">
-				<div className={`min-h-[100vh] bg-gold-50 ${colors.length === 0 ? "hidden" : ""}`}>
+				<section className={`min-h-[100vh] bg-gold-50 ${colorsArray.length === 0 ? "hidden" : ""}`}>
+					<h2 className="sr-only">Shades in tailwind and css code</h2>
 					<GenerateCode />
 					<div className="flex justify-center">
-						<button onClick={() => scrollTo("section2")} className={`absolute top-4 right-4 cursor-pointer ${colors.length === 0 ? "hidden" : ""}`} >
-							<IoIosArrowUp size={40} />
-						</button>
+						<NavigatePage upTo="section2" scrollTo={scrollTo} />
 					</div>
-				</div>
+				</section>
 			</Element>
 			
-		</div>
+		</main>
 	);
 }

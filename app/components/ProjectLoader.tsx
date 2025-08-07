@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useShadesContext } from "../context/ShadesContext";
-import { useColorContext } from "../context/ColorContext";
+import { useColorsStore } from "../store/colorsStore";
+import { useShadesStore } from "../store/shadesStore";
 import { useProjectNameContext } from "../context/ProjectNameContext";
 import { createClient } from "@/utils/supabase/client";
 import isEqual from 'lodash.isequal';
@@ -24,8 +24,8 @@ type ProjectData = {
 
 export default function ProjectLoader({ projectId }: { projectId: string }) {
     const supabase = createClient();
-    const { shades, setShades } = useShadesContext();
-    const { setColor } = useColorContext();
+    const { shades, setShades } = useShadesStore((state) => state);
+    const { setColors } = useColorsStore((state) => state);
     const { setProjectName } = useProjectNameContext(); 
 
     useEffect(() => {
@@ -62,7 +62,9 @@ export default function ProjectLoader({ projectId }: { projectId: string }) {
                 setShades(shadesData);
             }
             setProjectName(data.name)
-            setColor(data.colors.map(c => c.original_hex));
+            let string = "";
+            data.colors.map((c) => string += c.original_hex)
+            setColors(string);
         }
 
         if (projectId) loadProject();

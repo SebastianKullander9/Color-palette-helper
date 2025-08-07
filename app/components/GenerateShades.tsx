@@ -3,28 +3,21 @@
 import { useEffect, useState } from 'react';
 import convert from 'color-convert';
 import namer from "color-namer";
-import { useColorContext } from '../context/ColorContext';
-import { useShadesContext } from '../context/ShadesContext';
+import { useColorsStore } from '../store/colorsStore';
+import { useShadesStore, ColorShades } from '../store/shadesStore';
 import isEqual from 'lodash.isequal';
 import { IoCopyOutline } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 
-
-type ColorShades = {
-    name: string;
-    original_hex: string;
-    shades: number[][];
-}
-
 export default function GenerateShades() {
-    const { colors } = useColorContext();
-    const { shades, setShades } = useShadesContext();
+    const { colorsArray } = useColorsStore((state) => state);
+    const { shades, setShades } = useShadesStore((state) => state);
     const [copiedHex, setCopiedHex] = useState<string | null>(null);
 
     useEffect(() => {
         const allShades: ColorShades[] = [];
 
-        colors.forEach((color: string) => {
+        colorsArray.forEach((color: string) => {
             const hsl = convert.hex.hsl(color);
             const numberOfShades = 10;
             const start = 10;
@@ -52,7 +45,9 @@ export default function GenerateShades() {
         if (!isEqual(allShades, shades)) {
             setShades(allShades);
         }
-    }, [colors, setShades])
+    }, [colorsArray, setShades, shades])
+
+
 
     const handleCopy = (hsl: [number, number, number]) => {
         const hex = `#${convert.hsl.hex(hsl)}`;
@@ -65,14 +60,15 @@ export default function GenerateShades() {
         <div className="min-h-screen flex flex-col justify-center items-center mx-auto py-16">
             {shades?.map((shadeObj) => {
                 return (
-                    <div key={shadeObj.original_hex} className="grid grid-cols-4 lg:grid-cols-10 md:grid-cols-10 sm:grid-cols-5 mb-10">
+                    <ul key={shadeObj.original_hex} className="grid grid-cols-4 lg:grid-cols-10 md:grid-cols-10 sm:grid-cols-5 mb-10">
                     {shadeObj.shades.map((hsl, i) => (
-                        <div 
+                        <li 
                             key={i}
                             className="relative group w-20 h-20 mt-18"
                             style={{backgroundColor: `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`}}
                         >
                             <button
+                                aria-label={`Copy ${convert.hsl.hex(hsl as [number, number, number])} to clipboard`}
                                 onClick={() => handleCopy(hsl as [number, number, number])}
                                 className="w-12 h-12 absolute left-4 top-4 cursor-pointer px-2 py-1 text-xs bg-white bg-opacity-80 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 transform active:scale-95 transition duration-150"
                             >
@@ -81,16 +77,16 @@ export default function GenerateShades() {
                                 </div>
                             </button>
                             <div className="flex justify-center">
-                                <div className="flex justify-center relative bottom-8 bg-gray-50 text-text text-sm font-bold w-10 rounded">
+                                <div className="flex justify-center relative bottom-8 bg-gray-50 text-gray-600 text-sm font-bold w-10 rounded">
                                     <p className="flex">{hsl[2]}%</p>
                                 </div>
                             </div>
-                            <div className="flex justify-center relative top-16 text-sm">
+                            <div className="flex justify-center text-gray-800 relative top-16 text-sm">
                                 <p className="lowercase">{convert.hsl.hex(hsl as [number, number, number])}</p>
                             </div>
-                        </div>
+                        </li>
                     ))}
-                    </div>
+                    </ul>
                 );
             })}
         </div>
